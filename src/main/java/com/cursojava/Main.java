@@ -4,6 +4,7 @@ import com.cursojava.modelo.Producto;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
+
 import java.util.List;
 
 public class Main {
@@ -45,6 +46,30 @@ public class Main {
         Producto aEliminar = em.find(Producto.class, 2L);
         em.remove(aEliminar);
         em.getTransaction().commit();
+
+        // === DEMO: Tracking + Detach + Merge ===
+        System.out.println("\n=== TRACKING + DETACH + MERGE ===");
+
+        // 1. Buscar el teclado — queda MANAGED (Hibernate lo vigila)
+        Producto teclado2 = em.find(Producto.class, 3L);
+        System.out.println("Hibernate vigila teclado? " + em.contains(teclado2)); // true
+
+        // 2. DESCONECTAR — Hibernate deja de vigilarlo
+        em.detach(teclado2);
+        System.out.println("Despues de detach, vigila? " + em.contains(teclado2)); // false
+
+        // 3. Modificar el objeto desconectado — Hibernate NO se entera
+        teclado2.setPrecio(59.99);
+
+        // 4. RECONECTAR con merge — Hibernate lo vuelve a vigilar
+        em.getTransaction().begin();
+        Producto tecladoReconectado = em.merge(teclado2); // devuelve una COPIA managed
+        em.getTransaction().commit();
+
+        // 5. Comprobar tracking del original vs la copia
+        System.out.println("Vigila el original (teclado2)?    " + em.contains(teclado2));          // false
+        System.out.println("Vigila la copia (reconectado)?    " + em.contains(tecladoReconectado)); // true
+        System.out.println("Precio en BD: " + tecladoReconectado.getPrecio() + " (59.99 = merge funciono)");
 
         // === LISTAR TODOS ===
         System.out.println("\n=== LISTAR TODOS ===");

@@ -1,7 +1,6 @@
 package com.cursojava;
 
 import com.cursojava.modelo.Libro;
-import com.cursojava.modelo.Producto;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
@@ -67,7 +66,6 @@ public class LibroMain {
         em.getTransaction().begin();
         String tituloLibro = "El principito";
 
-
         List<Libro> libros = em.createQuery("SELECT l FROM Libro l WHERE l.titulo = :titulo", Libro.class)
                 .setParameter("titulo", tituloLibro)
                 .getResultList();
@@ -84,6 +82,5 @@ public class LibroMain {
         emf.close();
         System.out.println("\n=== FIN ===");
     }
-
 
 }

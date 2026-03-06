@@ -1,7 +1,6 @@
 package com.cursojava.modelo;
 
 import jakarta.persistence.*;
-import org.jetbrains.annotations.NotNull;
 
 @Entity
 public class Libro {
